@@ -1,0 +1,147 @@
+html {
+  --main-color: #2280b0;
+  --opposite-color: #b95087;
+  --rows-even: #f7f6f2;
+  --rows-odd: #c8c6c6;
+  --error-color: #b90000;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background-image: radial-gradient(var(--rows-odd) 1px, var(--rows-even) 1px),
+    radial-gradient(var(--rows-odd) 1px, var(--rows-even) 1px);
+  background-position: 0 0, 25px 25px;
+  background-size: 20px 20px;
+}
+
+.container {
+  max-width: 600px;
+  min-width: 320px;
+  width: 600px;
+  padding: 0 5px;
+  margin: 0 auto;
+}
+
+.flex-container {
+  display: flex;
+}
+
+.btn {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 0.25rem;
+  margin: 5px;
+  border: none;
+  text-decoration: none;
+  color: #fff;
+}
+
+.alert {
+  padding: 18px 45px;
+  color: #fff;
+  border-radius: 0.25rem;
+  text-align: center;
+}
+
+.success {
+  background-color: var(--main-color);
+  border-color: 1px solid var(--opposite-color);
+}
+
+h1 {
+  text-align: center;
+  padding: 20px 0;
+  text-transform: uppercase;
+}
+
+h2 {
+  color: var(--opposite-color);
+  padding-bottom: 0.5rem;
+}
+
+article {
+  padding: 10px;
+  border-radius: 0.25rem;
+}
+
+article:nth-child(odd) {
+  background-color: var(--rows-odd);
+}
+
+article:nth-child(even) {
+  background-color: var(--rows-even);
+}
+
+.download-container {
+  text-align: center;
+}
+
+.error {
+  color: var(--error-color);
+}
+
+/*     Estilos del los input FILES     */
+
+.input-file-container {
+  position: relative;
+  width: 225px;
+}
+
+.input-file-trigger {
+  display: block;
+  padding: 14px 45px;
+  background: var(--opposite-color);
+  color: #fff;
+  font-size: 1em;
+  transition: all 0.4s;
+  cursor: pointer;
+  border-radius: 0.25rem;
+}
+
+.input-file-trigger > span {
+  font-size: 1.5rem;
+}
+
+.input-file {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 225px;
+  opacity: 0;
+  padding: 14px 0;
+  cursor: pointer;
+}
+
+.input-file:hover + .input-file-trigger,
+.input-file:focus + .input-file-trigger,
+.input-file-trigger:hover,
+.input-file-trigger:focus {
+  background: #34495e;
+  color: var(--rows-even);
+}
+
+.file-return {
+  margin: 0;
+}
+
+.file-return:not(:empty) {
+  margin: 1em 0;
+}
+
+.file-return {
+  font-style: italic;
+  font-size: 0.9em;
+  font-weight: bold;
+}
+
+.file-return:not(:empty):before {
+  content: "Archivo seleccionado: ";
+  font-style: normal;
+  font-weight: normal;
+}
