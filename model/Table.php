@@ -81,7 +81,7 @@ class Table {
     foreach ($data as $key => $value) {
       $row['las_userid'] = $value['User ID_CLAS'];
       $row['las_url'] = $value['Web Analytics Page Path'];
-      $row['las_day'] = $value['Day'];
+      $row['las_day'] = date($value['Day']);
       $res = self::$db->insert($table, $row);
     }
 
