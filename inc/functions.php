@@ -84,7 +84,7 @@ function form($type, $action){
               <label tabindex=\"0\" for=\"{$type}\" class=\"input-file-trigger\">Subir archivo <span>☁️</span></label>
             </div>".PHP_EOL.
             "<p class=\"file-return\" id=\"return_{$type}\"></p>".PHP_EOL.
-          "<button class=\"btn success\" name=\"btn_{$type}\" aria-label=\"Archivo\">Enviar</button>".PHP_EOL.
+          "<button class=\"btn success\" name=\"btn_{$type}\" aria-label=\"Archivo\">Subir</button>".PHP_EOL.
           (!empty($_SESSION[$sessionMsq])? $_SESSION[$sessionMsq] : "") .
         "</form>";
   } else { 

@@ -42,6 +42,17 @@ class Table {
     return self::get_custom_data($data, $columns);
   }
 
+  private static function merge(&$data, $aux){
+    foreach ($data as $key => $value) {
+      foreach ($aux as $i => $val) {
+        if($value['ID'] === "{$i}")
+          foreach ($val as $j => $v) {
+            $data[$key][$j]= $v;
+          }
+      }
+    }
+  }
+
   static function insertUsers($file, $table, $columns=[]){
     self::connect();
     $data = self::choose_columns($file, $columns);
@@ -108,10 +119,30 @@ class Table {
 
   static function array_to_csv(){
     self::connect();
-    $sql = "SELECT use_userid AS ID, use_email AS Email, v.vis_nvisits AS 'Nro Visitas en los últimos 12 meses', l.las_url AS 'Ultima url visitada', l.las_day AS 'Día de visita a la última url', m.mos_url AS 'Url más visitada', m.mos_pageviews AS 'Nro de vistas a la url más visitada' FROM users JOIN visits AS v JOIN lastvisits AS l JOIN mostvisited AS m WHERE use_userid=v.vis_userid AND use_userid=l.las_userid AND use_userid = m.mos_userid";
+    $sql = "SELECT use_userid AS ID, use_email AS Email, v.vis_nvisits AS 'Nro de visitas' FROM users JOIN visits AS v ON users.use_userid=v.vis_userid ORDER BY use_userid";
     $data = self::$db->raw($sql);
-    $fp = fopen('public/analitics.csv', 'a');
+    $aux = [];
+
+    foreach ($data as $key => $value) {
+      $sql_temp = "SELECT las_day AS day, las_url AS 'Ultima url visitada' FROM lastvisits WHERE las_userid={$value['ID']} ORDER BY las_day DESC limit 1";
+      $temp = self::$db->raw($sql_temp);
+      foreach ($temp as $k => $val) {
+        $aux[$value['ID']] = $val;
+      }
+    }
+    self::merge($data, $aux);
+    unset($aux);
     
+    foreach ($data as $key => $value) {
+      $sql_temp = "SELECT mos_url AS 'Url mas visitada', mos_pageviews AS 'Nro de visitas Url mas visitada' FROM mostvisited WHERE mos_userid={$value['ID']} ORDER BY mos_pageviews DESC limit 1;";
+      $temp = self::$db->raw($sql_temp);
+      foreach ($temp as $k => $val) {
+        $aux[$value['ID']] = $val;
+      }
+    }
+    self::merge($data, $aux);  
+    $fp = fopen('public/analitics.csv', 'a');
+  
     //creamos el encabezado
     foreach ($data[0] as $key => $value) {
       $head[] = $key;
@@ -124,7 +155,6 @@ class Table {
     }
     
     fclose($fp);
-
     self::close();
   }
 
