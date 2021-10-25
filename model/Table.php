@@ -45,7 +45,7 @@ class Table {
   private static function merge(&$data, $aux){
     foreach ($data as $key => $value) {
       foreach ($aux as $i => $val) {
-        if($value['ID'] === "{$i}")
+        if($value['User ID'] === "{$i}")
           foreach ($val as $j => $v) {
             $data[$key][$j]= $v;
           }
@@ -58,6 +58,7 @@ class Table {
     $data = self::choose_columns($file, $columns);
     foreach ($data as $key => $value) {
       $row['use_userid'] = $value['ID '];
+      $row['use_daylogin'] = date($value[' Dia de login OWA ']);
       $row['use_email'] = $value[' Email  '];
       $row['use_onekeycode'] = $value['OneKeyCode'];
       $res = self::$db->insert($table, $row);
@@ -119,29 +120,29 @@ class Table {
 
   static function array_to_csv(){
     self::connect();
-    $sql = "SELECT use_userid AS ID, use_email AS Email, v.vis_nvisits AS 'Nro de visitas' FROM users JOIN visits AS v ON users.use_userid=v.vis_userid ORDER BY use_userid";
+    $sql = "SELECT use_onekeycode AS Onekey, use_daylogin AS 'Dia login', use_userid AS 'User ID', use_email AS Email, v.vis_nvisits AS 'Sessions' FROM users JOIN visits AS v ON users.use_userid=v.vis_userid ORDER BY use_userid";
     $data = self::$db->raw($sql);
     $aux = [];
 
     foreach ($data as $key => $value) {
-      $sql_temp = "SELECT las_day AS day, las_url AS 'Ultima url visitada' FROM lastvisits WHERE las_userid={$value['ID']} ORDER BY las_day DESC limit 1";
+      $sql_temp = "SELECT las_day AS 'Day', las_url AS 'Last Page visited' FROM lastvisits WHERE las_userid={$value['User ID']} ORDER BY las_day DESC limit 1";
       $temp = self::$db->raw($sql_temp);
       foreach ($temp as $k => $val) {
-        $aux[$value['ID']] = $val;
+        $aux[$value['User ID']] = $val;
       }
     }
     self::merge($data, $aux);
     unset($aux);
     
     foreach ($data as $key => $value) {
-      $sql_temp = "SELECT mos_url AS 'Url mas visitada', mos_pageviews AS 'Nro de visitas Url mas visitada' FROM mostvisited WHERE mos_userid={$value['ID']} ORDER BY mos_pageviews DESC limit 1;";
+      $sql_temp = "SELECT mos_url AS 'Most Page visited', mos_pageviews AS 'Page views' FROM mostvisited WHERE mos_userid={$value['User ID']} ORDER BY mos_pageviews DESC limit 1;";
       $temp = self::$db->raw($sql_temp);
       foreach ($temp as $k => $val) {
-        $aux[$value['ID']] = $val;
+        $aux[$value['User ID']] = $val;
       }
     }
     self::merge($data, $aux);  
-    $fp = fopen('public/analitics.csv', 'a');
+    $fp = fopen('public/analitics.csv', 'w');
   
     //creamos el encabezado
     foreach ($data[0] as $key => $value) {
@@ -156,6 +157,7 @@ class Table {
     
     fclose($fp);
     self::close();
+    echo "Successfully!!!";
   }
 
   static function format($file){
