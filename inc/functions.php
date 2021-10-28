@@ -1,7 +1,7 @@
 <?php 
 /**
- * Author: @luichidev
- * Web: https://luisalbertoarana.com
+* Author: Luis Alberto Arana M.
+ * twitter: @luichidev
  * Creation: 19/10/2021
  * Revision: 19/10/2021
  */
