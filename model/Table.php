@@ -1,4 +1,12 @@
 <?php 
+/**
+ * Author: Luis Alberto Arana M.
+ * twitter: @luichidev
+ * Web: https://luisalbertoarana.com
+ * Creation: 19/10/2021
+ * Revision: 26/10/2021
+ */
+
 include_once("library/mysqluis.php");
 
 class Table {
@@ -135,7 +143,7 @@ class Table {
     unset($aux);
     
     foreach ($data as $key => $value) {
-      $sql_temp = "SELECT mos_url AS 'Most Page visited', mos_pageviews AS 'Page views' FROM mostvisited WHERE mos_userid={$value['User ID']} ORDER BY mos_pageviews DESC limit 1;";
+      $sql_temp = "SELECT mos_url AS 'Most Page visited', mos_pageviews AS 'Page views' FROM mostvisited WHERE mos_userid={$value['User ID']} AND (mos_url <> '/' AND mos_url <> '/logged-in-home/') ORDER BY mos_pageviews DESC";
       $temp = self::$db->raw($sql_temp);
       foreach ($temp as $k => $val) {
         $aux[$value['User ID']] = $val;
